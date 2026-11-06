@@ -13,7 +13,7 @@ class BitcoinExchange
 	private:
 		std::map<std::string, double> _db;
 
-		bool	isValidDate(const std::string& date);
+		
 
 
 
@@ -23,4 +23,5 @@ class BitcoinExchange
 		BitcoinExchange& operator=(const BitcoinExchange& source);
 		~BitcoinExchange();
 
+		bool	isValidDate(const std::string& date);
 };

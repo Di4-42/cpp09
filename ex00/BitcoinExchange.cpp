@@ -10,7 +10,7 @@ BitcoinExchange::BitcoinExchange(const BitcoinExchange& source) : _db(source._db
 	std::cout << "Copy constructor called" << std::endl;
 }
 
-BitcoinExchange& BitcoinExchange::operator=(cpnst BitcoinExchange& source)
+BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange& source)
 {
 	std::cout << "Copy assignement operator called" << std::endl;
 	if (this != &source)
