@@ -24,4 +24,5 @@ class BitcoinExchange
 		~BitcoinExchange();
 
 		bool	isValidDate(const std::string& date);
+		bool	isValidValue(const std::string& bitcoin, double& out);
 };

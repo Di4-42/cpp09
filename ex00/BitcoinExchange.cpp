@@ -61,8 +61,40 @@ bool	BitcoinExchange::isValidDate(const std::string& date)
 	return true;
 
 }
-
 	/* 1900 -> divisible par 100 pas par 400 -> 28 fevrier
 	   2000 -> divisible par 400 			 -> 29 fevrier
 	   2100 -> divisible par 100 pas par 400 -> 28 fevrier,
 	*/
+
+bool	BitcoinExchange::isValidValue(const std::string& bitcoin, double& out)
+{
+	if (bitcoin.empty())
+	{
+		std::cout << "Error: bad input" << std::endl;
+		return false;
+	}
+
+	char* endptr;
+	double value = std::strtod(bitcoin.c_str(), &endptr);
+
+	if (endptr == bitcoin.c_str() || *endptr != '\0' || value != value)
+	{
+		std::cout << "Error: bad input" << std::endl;
+		return false;
+	}
+
+	if (value < 0)
+	{
+		std::cout << "Error: not a positive number" << std::endl;
+		return false;
+	}
+
+	if (value > 1000)
+	{
+		std::cout << "Error: too large number" << std::endl;
+		return false;
+	}
+
+	out = value;
+	return true;
+}
