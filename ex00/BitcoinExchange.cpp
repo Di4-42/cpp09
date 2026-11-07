@@ -98,3 +98,17 @@ bool	BitcoinExchange::isValidValue(const std::string& bitcoin, double& out)
 	out = value;
 	return true;
 }
+
+double	BitcoinExchange::getRateForDate(const std::string& date)
+{
+	std::map<std::string, double>::iterator it = _db.lower_bound(date);
+
+	if (it == _db.end() || it->first != date)
+	{
+		if (it == _db.begin())
+			throw std::runtime_error("Error: bad input => " + date);
+		--it;
+	}
+	return it->second;
+}
+

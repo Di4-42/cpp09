@@ -1,22 +1,15 @@
 #pragma once
 
-#include <iostream>
-#include <stdexcept>
-#include <cstdlib>
-#include <cctype>
-#include <fstream>
-#include <string>
 #include <map>
+#include <iostream>
+
 
 class BitcoinExchange
 {
 	private:
-		std::map<std::string, double> _db;
-
 		
 
-
-
+	
 	public:
 		BitcoinExchange();
 		BitcoinExchange(const BitcoinExchange& source);
@@ -25,4 +18,6 @@ class BitcoinExchange
 
 		bool	isValidDate(const std::string& date);
 		bool	isValidValue(const std::string& bitcoin, double& out);
+		double	getRateForDate(const std::string& date);
+		std::map<std::string, double> _db;
 };
