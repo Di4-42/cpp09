@@ -37,7 +37,7 @@ bool	BitcoinExchange::isValidDate(const std::string& date)
 			return false;
 	}
 	int	year = std::atoi(date.substr(0, 4).c_str());  //recupere un pointeur vers son texte
-	int	month = std::atoi(date.substr(5, 2).c_str()); // // "04" devient int 4
+	int	month = std::atoi(date.substr(5, 2).c_str()); // "04" devient int 4
 	int	day = std::atoi(date.substr(8, 2).c_str());
 	int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
@@ -60,11 +60,12 @@ bool	BitcoinExchange::isValidDate(const std::string& date)
 		return false;
 	return true;
 
-}
 	/* 1900 -> divisible par 100 pas par 400 -> 28 fevrier
 	   2000 -> divisible par 400 			 -> 29 fevrier
 	   2100 -> divisible par 100 pas par 400 -> 28 fevrier,
 	*/
+
+}
 
 bool	BitcoinExchange::isValidValue(const std::string& bitcoin, double& out)
 {
@@ -112,3 +113,85 @@ double	BitcoinExchange::getRateForDate(const std::string& date)
 	return it->second;
 }
 
+void BitcoinExchange::loadDatabase(const std::string& filename)
+{
+	std::ifstream	file(filename.c_str());
+
+	if (!file.is_open())
+		throw std::runtime_error("Failed to open data file");
+
+
+	std::string line;
+	std::getline(file, line);
+	
+	while(std::getline(file, line))
+	{
+		if (line.empty())
+			continue;    //saute le reste du while
+		
+		size_t virgule = line.find(",");
+
+		if (virgule == std::string::npos)
+			continue;
+		
+		std::string date = line.substr(0, virgule);
+		std::string val = line.substr(virgule + 1);
+
+		double taux = std::strtod(val.c_str(), NULL);
+		_db[date] = taux;
+	}
+}
+
+void BitcoinExchange::processInput(const std::string& filename)
+{
+	std::ifstream	file(filename.c_str());
+
+	if (!file.is_open())
+		throw std::runtime_error("Error: couldn't open input file");
+	
+	std::string line;
+	std::getline(file, line);
+
+	while(std::getline(file, line))
+	{
+		if (line.empty())
+			continue;
+		
+		size_t sep = line.find(" | ");
+
+		if (sep == std::string::npos)
+		{
+			std::cout << "Error: bad input => " << line << std::endl;
+			continue;
+		}
+
+		std::string date = line.substr(0, sep);
+		std::string bitcoin = line.substr(sep + 3);
+
+		if (!isValidDate(date))
+		{
+			std::cout << "Error: bad input => " << date << std::endl;
+			continue;
+		}
+
+		double value;
+		if (!isValidValue(bitcoin, value))
+			continue;
+		
+		double taux;
+		try
+		{
+			taux = getRateForDate(date);
+		}
+		catch(const std::exception& e)
+		{
+			std::cerr << e.what() << std::endl;
+			continue;
+		}
+		std::cout << date << "=>" << value << " = " << value * taux;
+	}
+}
+
+//date = "2011-01-03";
+//value = 3;
+//taux = 0.3;
