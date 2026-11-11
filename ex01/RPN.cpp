@@ -75,16 +75,16 @@ int	RPN::evaluate(const std::string& expression)
 		if (c >= '0' && c <= '9')
 		{
 			if (i + 1 < expression.size() && expression[i + 1] >= '0'
-				&& expression[i + 1] >= '9')
-				throw std::runtime_error("Error");
-			_stack.push(c - '0');
+				&& expression[i + 1] <= '9')
+				throw std::runtime_error("Error: only singe digit number are allowed");
+			_stack.push(c - '0');  // - '48';
 		} 
 		else if (c == '+' || c == '-' || c == '*' || c == '/')
 			applyOperator(c); // op
 		else
-			throw std::runtime_error("Error");
+			throw std::runtime_error("Error: invalid character");
 	}
 	if (_stack.size() != 1)
-		throw std::runtime_error("Error");
+		throw std::runtime_error("Error: expression must produce exactly one result");
 	return _stack.top();
 }	
