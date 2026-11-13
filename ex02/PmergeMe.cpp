@@ -130,3 +130,30 @@ static size_t chercherPosition(const T& chain, const T& value, int id, size_t ri
     }
     return left;
 }
+
+int main()
+{
+    int nombres[] = {8, 3, 2, 7};
+    int indices[] = {0, 1, 2, 3};
+
+    std::vector<int> value(nombres, nombres + 4);
+    std::vector<int> ordre(indices, indices + 4);
+    std::vector<int> highers;
+    std::vector<int> partner(4, -1);
+
+    std::vector<int> jacob = getJacobsthalOrder(3);
+    std::cout << jacob[0] << " " << jacob[1] << std::endl;
+
+    formerPaires(ordre, value, highers, partner);
+    std::cout << highers[0] << " " << highers[1] << std::endl;
+    std::cout << partner[0] << " " << partner[3] << std::endl;
+
+    std::swap(highers[0], highers[1]);
+    std::vector<int> attente = recupererPetits(ordre, highers, partner);
+    std::cout << attente[0] << " " << attente[1] << std::endl;
+
+    std::cout << chercherPosition(highers, value, 1, highers.size())
+              << std::endl;
+
+    return 0;
+}
