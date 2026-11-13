@@ -81,13 +81,52 @@ static  std::vector<int> getJacobsthalOrder(int n)
     return ordre;
 }
 
-int main()
+template <typename T>
+static void formerPaires(const T& ordre, const T& value, T& highers, T& partner)
 {
-    std::vector<int> resultat = getJacobsthalOrder(7);
+    for(size_t i = 0; i + 1 < ordre.size(); i += 2)   //formation des paires
+    {
+        int higher = ordre[i];
+        int lower = ordre[i + 1];
 
-    for (size_t i = 0; i < resultat.size(); i++)
-        std::cout << resultat[i] << " ";
-    std::cout << std::endl;
+        if (value[higher] < value[lower])    //si highers contient le plus petit swap
+            std::swap(higher, lower);
 
-    return 0;
+        highers.push_back(higher);
+        partner[higher] = lower;
+    }
+
+}
+
+template <typename T>
+static T recupererPetits(const T& ordre, T& highers, T& partner)
+{
+    T attente;
+
+    for(size_t i = 0; i < highers.size(); i++)
+        attente.push_back(partner[highers[i]]);
+
+    if (ordre.size() % 2 != 0)  //chopper les pas paires
+        attente.push_back(ordre.back());
+    
+    return attente;
+}
+
+template <typename T>
+static size_t chercherPosition(const T& chain, const T& value, int id, size_t right)
+{
+    size_t left = 0;
+    size_t middle = 0;
+
+    while (left < right)
+    {
+        middle = left + (right - left) / 2;
+
+        if (value[chain[middle]] < value[id])
+            left = middle + 1;
+        
+        else
+            right = middle;
+    }
+    return left;
 }
